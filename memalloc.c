@@ -21,12 +21,38 @@
 // THE SOFTWARE.
 
 #include "memalloc.h"
-
+//Only function that should use malloc
 int memalloc_init( size_t size, enum ALGORITHM algorithm )
 {
+  if (size<1)
+  {
+    /* Invalid memory size */
+    return -1;
+  }
+  switch (algorithm)
+  {
+  case NEXT_FIT/* constant-expression */:
+    /* code */
+
+    break;
+
+
+  case BEST_FIT:
+    break;
+
+  case WORST_FIT:
+    break;
+
+  case FIRST_FIT:
+    break;
+  default:
+    return -1;
+    break;
+  }
+  
   return 0;
 }
-
+//Only function that should use free
 void memalloc_destroy( )
 {
   return;
