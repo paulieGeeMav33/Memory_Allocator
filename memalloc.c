@@ -21,19 +21,56 @@
 // THE SOFTWARE.
 
 #include "memalloc.h"
+#include <stdlib.h>
+// 2 Global variables Arena, Algo
+
+enum ALGORITHM algor;
+void * Arena_ptr;
+struct node
+{
+  void* curr;
+  void* next;
+};
+
+//*node ll;
+/*Make a linked list node to help with allocations*/
+
+
+
+
 //Only function that should use malloc
+//May have to use malloc multipile times if using linked list
 int memalloc_init( size_t size, enum ALGORITHM algorithm )
 {
+  
   if (size<1)
   {
     /* Invalid memory size */
     return -1;
   }
-  switch (algorithm)
+  size = ALIGN4(size);
+  algor = algorithm;
+  Arena_ptr = malloc(size);
+  
+  return 0;
+}
+//Only function that should use free
+void memalloc_destroy( )
+{
+  return;
+}
+
+void * memalloc_alloc( size_t size )
+{
+  // only return NULL on failure
+  return NULL;
+
+  size = ALIGN4(size);
+
+  switch (algor)
   {
   case NEXT_FIT/* constant-expression */:
     /* code */
-
     break;
 
 
@@ -49,23 +86,12 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
     return -1;
     break;
   }
-  
-  return 0;
-}
-//Only function that should use free
-void memalloc_destroy( )
-{
-  return;
 }
 
-void * memalloc_alloc( size_t size )
-{
-  // only return NULL on failure
-  return NULL;
-}
-
+//Shows block of memory is open
 void memalloc_free( void * ptr )
 {
+  free(algor);
   return;
 }
 
