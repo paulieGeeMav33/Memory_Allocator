@@ -34,6 +34,21 @@ enum ALGORITHM
   FIRST_FIT
 }; 
 
+typedef enum TYPE{
+  P,
+  HOLE
+}TYPE;
+
+typedef struct 
+{
+  size_t size;
+  TYPE type;
+  void* curr;
+  void* prev;
+  void* next;
+}node;
+
+typedef node * Node;
 /**
  * @brief Initialize the allocation arena and set the algorithm type
  *

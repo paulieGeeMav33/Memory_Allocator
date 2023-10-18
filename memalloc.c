@@ -26,13 +26,9 @@
 
 enum ALGORITHM algor;
 void * Arena_ptr;
-struct node
-{
-  void* curr;
-  void* next;
-};
 
-//*node ll;
+Node ll = NULL;
+
 /*Make a linked list node to help with allocations*/
 
 
@@ -71,6 +67,14 @@ void * memalloc_alloc( size_t size )
   {
   case NEXT_FIT/* constant-expression */:
     /* code */
+    node * list = ll;
+    while (ll)
+    {
+      if(ll->type == HOLE && ll->size >= size){
+        ll->type = P;
+      }
+    }
+    
     break;
 
 
@@ -83,7 +87,7 @@ void * memalloc_alloc( size_t size )
   case FIRST_FIT:
     break;
   default:
-    return -1;
+    return NULL;
     break;
   }
 }
@@ -91,7 +95,7 @@ void * memalloc_alloc( size_t size )
 //Shows block of memory is open
 void memalloc_free( void * ptr )
 {
-  free(algor);
+  free(Arena_ptr);
   return;
 }
 
