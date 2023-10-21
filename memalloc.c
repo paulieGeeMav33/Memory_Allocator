@@ -61,53 +61,91 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
 void memalloc_destroy( )
 {
   free(Arena_ptr);
+  Node next = NULL;
+  while(ll){
+    if (ll->next)
+    {
+      next = ll->next;
+    }
+
+    free(ll);
+    ll = next;
+
+    
+  }
   return;
 }
 
 void * memalloc_alloc( size_t size )
 {
   // only return NULL on failure
-  return NULL;
+  //return NULL;
 
   size = ALIGN4(size);
 
-  Node list = malloc(sizeof(node));
+  Node list = ll;
 
   switch (algor)
   {
   case NEXT_FIT/* constant-expression */:
     /* code */
-    while (ll)
-    {
-      if(ll->type == HOLE && ll->size >= size){
-        ll->type = PROCESS;
-        list->size = ll->size - size;
-        list->type = HOLE;
-        ll->size -= size;
-        
-      }
-      ll = ll->next;
-    }
     
+    return NULL;
     break;
 
 
   case BEST_FIT:
+    return NULL;
     break;
 
   case WORST_FIT:
+    return NULL;
     break;
 
   case FIRST_FIT:
-    while (ll)
+    /*while (ll)
     {
       if (ll->size >= size && ll->type == HOLE)
       {
+        //Geneeral changes
         ll->type = PROCESS;
+        list->prev = ll;
+        ll->next = list;
+        list->Arena_ptr = Arena_ptr;
+        list->type = HOLE;
+
+        list->size = ll->size - size;
+        ll->size = size;
+
+    }*/
+
+
+    while (ll)
+    {
+      if(ll->type == HOLE && ll->size >= size){
+        ll->type = PROCESS;
+        //size_t new_size = ll->size - size;
+        if (ll->size > size)
+        {
+          Node new_node = malloc(sizeof(node));
+
+          //allocating new node and linked list
+          ll->next = new_node;
+          new_node->prev = ll;
+          new_node->size = ll->size - size;
+          ll->size = size;
+
+          //
+          new_node->type = HOLE;
+          new_node->Arena_ptr = ll->Arena_ptr + size;
+        }
+        void* ans = ll->Arena_ptr;
+        ll = list;
+        return ans;
       }
-      
+      ll = ll->next;
     }
-    
+    return NULL;
     break;
   default:
     return NULL;
