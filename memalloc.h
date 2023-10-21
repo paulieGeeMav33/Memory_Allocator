@@ -35,18 +35,18 @@ enum ALGORITHM
 }; 
 
 typedef enum TYPE{
-  P,
+  PROCESS,
   HOLE
 }TYPE;
 
-typedef struct 
+typedef struct node
 {
   size_t size;
   TYPE type;
-  void* curr;
-  void* prev;
-  void* next;
-}node;
+  struct node* prev;
+  struct node* next;
+  void* Arena_ptr
+} node;
 
 typedef node * Node;
 /**

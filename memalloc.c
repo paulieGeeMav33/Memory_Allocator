@@ -26,7 +26,6 @@
 
 enum ALGORITHM algor;
 void * Arena_ptr;
-
 Node ll = NULL;
 
 /*Make a linked list node to help with allocations*/
@@ -47,12 +46,21 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
   size = ALIGN4(size);
   algor = algorithm;
   Arena_ptr = malloc(size);
+
+  //Linked list allocation
+  ll = malloc(sizeof(node));
+  ll->size = sizeof(Arena_ptr);
+  ll->Arena_ptr = Arena_ptr;
+  ll->type = HOLE;
   
   return 0;
 }
+
+
 //Only function that should use free
 void memalloc_destroy( )
 {
+  free(Arena_ptr);
   return;
 }
 
@@ -63,16 +71,22 @@ void * memalloc_alloc( size_t size )
 
   size = ALIGN4(size);
 
+  Node list = malloc(sizeof(node));
+
   switch (algor)
   {
   case NEXT_FIT/* constant-expression */:
     /* code */
-    node * list = ll;
     while (ll)
     {
       if(ll->type == HOLE && ll->size >= size){
-        ll->type = P;
+        ll->type = PROCESS;
+        list->size = ll->size - size;
+        list->type = HOLE;
+        ll->size -= size;
+        
       }
+      ll = ll->next;
     }
     
     break;
@@ -85,6 +99,15 @@ void * memalloc_alloc( size_t size )
     break;
 
   case FIRST_FIT:
+    while (ll)
+    {
+      if (ll->size >= size && ll->type == HOLE)
+      {
+        ll->type = PROCESS;
+      }
+      
+    }
+    
     break;
   default:
     return NULL;
@@ -95,7 +118,7 @@ void * memalloc_alloc( size_t size )
 //Shows block of memory is open
 void memalloc_free( void * ptr )
 {
-  free(Arena_ptr);
+  
   return;
 }
 
