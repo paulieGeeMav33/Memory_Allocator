@@ -27,6 +27,7 @@
 enum ALGORITHM algor;
 void * Arena_ptr;
 Node ll = NULL;
+void * last_alloc;
 
 /*Make a linked list node to help with allocations*/
 
@@ -49,7 +50,7 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
 
   //Linked list allocation
   ll = malloc(sizeof(node));
-  ll->size = sizeof(Arena_ptr);
+  ll->size = size;
   ll->Arena_ptr = Arena_ptr;
   ll->type = HOLE;
   
@@ -139,9 +140,9 @@ void * memalloc_alloc( size_t size )
           new_node->type = HOLE;
           new_node->Arena_ptr = ll->Arena_ptr + size;
         }
-        void* ans = ll->Arena_ptr;
-        ll = list;
-        return ans;
+        //void* ans = ll->Arena_ptr;
+        //ll = list;
+        return ll->Arena_ptr;
       }
       ll = ll->next;
     }
