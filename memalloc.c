@@ -156,6 +156,12 @@ void * memalloc_alloc( size_t size )
 //Shows block of memory is open
 void memalloc_free( void * ptr )
 {
+  while (ll)
+  {
+    if(ptr == ll){
+      ll->type = HOLE;
+    }
+  }
   
   return;
 }
