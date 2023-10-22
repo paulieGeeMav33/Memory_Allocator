@@ -96,37 +96,49 @@ void * memalloc_alloc( size_t size )
       ll = last_alloc;
     }
     
-    while (ll && check != 1)
+    while (ll)
     {
       
 
-      if(ll->type == HOLE && ll->size >= size){
+      if(ll->type == HOLE && ll->size >= size)
+      {
         ll->type = PROCESS;
         if (ll->size > size)
         {
           Node new_node = malloc(sizeof(node));
+          
+          new_node->next = ll->next;
 
           //allocating new node and linked list
           ll->next = new_node;
           new_node->prev = ll;
           new_node->size = ll->size - size;
           ll->size = size;
+          
 
-          //
+          //New node for new size
           new_node->type = HOLE;
           new_node->Arena_ptr = ll->Arena_ptr + size;
-          last_alloc = ll;
         }
+
+        last_alloc = ll;
         void* ans = ll->Arena_ptr;
         ll = list;
         return ans;
       }
 
-      else if (ll->next == NULL)
+      //Reached end of ll and haven't found space
+      else if (ll->next == NULL && ll->size < size)
       {
         check = 1;
-        //ll = list;
+        ll = list;
       }
+
+      else if (ll == last_alloc && check == 1)
+      {
+        break;
+      }
+      
       
       
       
@@ -134,8 +146,8 @@ void * memalloc_alloc( size_t size )
       ll = ll->next;
     }
 
-
-    
+    //Back to head
+    ll = list;
     return NULL;
     break;
 
@@ -173,6 +185,7 @@ void * memalloc_alloc( size_t size )
         if (ll->size > size)
         {
           Node new_node = malloc(sizeof(node));
+          new_node->next = ll->next;
 
           //allocating new node and linked list
           ll->next = new_node;
@@ -191,6 +204,8 @@ void * memalloc_alloc( size_t size )
       ll = ll->next;
     }
     
+    //Back to head of list
+    ll = list;
     return NULL;
     break;
   default:
@@ -202,10 +217,12 @@ void * memalloc_alloc( size_t size )
 //Shows block of memory is open
 void memalloc_free( void * ptr )
 {
+  Node save = ll;
   while (ll)
   {
     if(ptr == ll->Arena_ptr){
-      //ll->type = HOLE;
+      ll->type = HOLE;
+      ll = save;
       break;
     }
     ll = ll->next;
