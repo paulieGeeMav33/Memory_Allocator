@@ -27,7 +27,7 @@
 enum ALGORITHM algor;
 void * Arena_ptr;
 Node ll = NULL;
-void * last_alloc;
+Node last_alloc = NULL;
 
 /*Make a linked list node to help with allocations*/
 
@@ -53,6 +53,7 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
   ll->size = size;
   ll->Arena_ptr = Arena_ptr;
   ll->type = HOLE;
+  ll->next = NULL;
   
   return 0;
 }
@@ -84,8 +85,56 @@ void * memalloc_alloc( size_t size )
 
   switch (algor)
   {
-  case NEXT_FIT/* constant-expression */:
-    /* code */
+  case NEXT_FIT:
+    ;
+    //Checks if we have reached end of list
+    int check = 0;
+
+    //If last alloc is null do not change ll 
+    if (last_alloc)
+    {
+      ll = last_alloc;
+    }
+    
+    while (ll && check != 1)
+    {
+      
+
+      if(ll->type == HOLE && ll->size >= size){
+        ll->type = PROCESS;
+        if (ll->size > size)
+        {
+          Node new_node = malloc(sizeof(node));
+
+          //allocating new node and linked list
+          ll->next = new_node;
+          new_node->prev = ll;
+          new_node->size = ll->size - size;
+          ll->size = size;
+
+          //
+          new_node->type = HOLE;
+          new_node->Arena_ptr = ll->Arena_ptr + size;
+          last_alloc = ll;
+        }
+        void* ans = ll->Arena_ptr;
+        ll = list;
+        return ans;
+      }
+
+      else if (ll->next == NULL)
+      {
+        check = 1;
+        //ll = list;
+      }
+      
+      
+      
+
+      ll = ll->next;
+    }
+
+
     
     return NULL;
     break;
