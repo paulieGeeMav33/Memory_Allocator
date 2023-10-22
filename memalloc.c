@@ -62,15 +62,11 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
 void memalloc_destroy( )
 {
   free(Arena_ptr);
-  Node next = NULL;
+  Node save = NULL;
   while(ll){
-    if (ll->next)
-    {
-      next = ll->next;
-    }
-
+    save = ll->next;
     free(ll);
-    ll = next;
+    ll = save;
 
     
   }
@@ -125,7 +121,6 @@ void * memalloc_alloc( size_t size )
     {
       if(ll->type == HOLE && ll->size >= size){
         ll->type = PROCESS;
-        //size_t new_size = ll->size - size;
         if (ll->size > size)
         {
           Node new_node = malloc(sizeof(node));
@@ -140,12 +135,13 @@ void * memalloc_alloc( size_t size )
           new_node->type = HOLE;
           new_node->Arena_ptr = ll->Arena_ptr + size;
         }
-        //void* ans = ll->Arena_ptr;
-        //ll = list;
-        return ll->Arena_ptr;
+        void* ans = ll->Arena_ptr;
+        ll = list;
+        return ans;
       }
       ll = ll->next;
     }
+    
     return NULL;
     break;
   default:
@@ -159,9 +155,11 @@ void memalloc_free( void * ptr )
 {
   while (ll)
   {
-    if(ptr == ll){
-      ll->type = HOLE;
+    if(ptr == ll->Arena_ptr){
+      //ll->type = HOLE;
+      break;
     }
+    ll = ll->next;
   }
   
   return;
@@ -170,6 +168,15 @@ void memalloc_free( void * ptr )
 int memalloc_size( )
 {
   int number_of_nodes = 0;
+  Node save = ll;
+  while (ll)
+  {
+    number_of_nodes++;
+    ll = ll->next;
+  }
+
+  ll = save;
+  
 
   return number_of_nodes;
 }
