@@ -178,6 +178,20 @@ void * memalloc_alloc( size_t size )
     ll = list;
     if (winner)
     {
+      
+      /*if (winner->size > size)
+      {
+        Node new_node = malloc(sizeof(node));
+        
+        new_node->next = winner->next;
+
+        //allocating new node and linked list
+        winner->next = new_node;
+        new_node->prev = winner;
+        new_node->size = winner->size - size;
+        winner->size = size;
+      }*/
+      
       return winner->Arena_ptr;
     }
     
@@ -186,6 +200,46 @@ void * memalloc_alloc( size_t size )
     break;
 
   case WORST_FIT:
+
+    ;
+    size_t min = INT_MIN;
+    size_t node_size_worst = 0;
+    Node loser = NULL;
+    while (ll)
+    {
+      if(ll->type == HOLE && ll->size >= size)
+      {
+        node_size_worst = ll->size - size;
+        if (node_size_worst > min)
+        {
+          min = node_size_worst;
+          loser = ll;
+        }
+        
+      }
+      ll = ll->next;
+    }
+
+    ll = list;
+    if (loser)
+    {
+      
+      /*if (loser->size > size)
+      {
+        Node new_node = malloc(sizeof(node));
+        
+        new_node->next = loser->next;
+
+        //allocating new node and linked list
+        loser->next = new_node;
+        new_node->prev = loser;
+        new_node->size = loser->size - size;
+        loser->size = size;
+      }*/
+      
+      return loser->Arena_ptr;
+    }
+
     return NULL;
     break;
 
