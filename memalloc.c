@@ -56,6 +56,9 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
   ll->type = HOLE;
   ll->next = NULL;
   ll->prev = NULL;
+
+  //No allocations yet
+  last_alloc = NULL;
   
   return 0;
 }
