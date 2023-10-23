@@ -175,15 +175,19 @@ void * memalloc_alloc( size_t size )
 
   case BEST_FIT:
     ;
+    //Biggest number to work agianst
     size_t max = INT_MAX;
+    //Initialize variable
     size_t node_size = 0;
+    //
     Node winner = NULL;
     while (ll)
     {
       if(ll->type == HOLE && ll->size >= size)
       {
+        //
         node_size = ll->size - size;
-        if (node_size < max && node_size > 0)
+        if (node_size < max)
         {
           max = node_size;
           winner = ll;
@@ -213,8 +217,12 @@ void * memalloc_alloc( size_t size )
 
         //allocating new node and linked list
         winner->next = new_node;
+
         new_node->prev = winner;
         new_node->size = winner->size - size;
+        new_node->type = HOLE;
+        new_node->Arena_ptr = winner->Arena_ptr + size;
+
         winner->size = size;
       }
       
@@ -325,7 +333,7 @@ void memalloc_free( void * ptr )
   {
     if(ptr == ll->Arena_ptr){
       ll->type = HOLE;
-      ll = save;
+      
       if (ll->next && ll->next->type == HOLE)
       {
         Node next = ll->next;
@@ -336,6 +344,18 @@ void memalloc_free( void * ptr )
         ll->next = next->next;
         free(next);
       }
+
+      else if (ll->prev && ll->prev->type == HOLE)
+      {
+        Node prev = ll->prev;
+        //Combine unused memory
+        ll->size = ll->size + prev->size;
+
+
+        ll->prev = prev->next;
+        free(prev);
+      }
+      ll = save;
       
       break;
     }
