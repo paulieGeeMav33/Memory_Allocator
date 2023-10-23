@@ -220,7 +220,7 @@ void * memalloc_alloc( size_t size )
   case WORST_FIT:
 
     ;
-    size_t min = INT_MIN;
+    size_t min = 0;
     size_t node_size_worst = 0;
     Node loser = NULL;
     while (ll)
