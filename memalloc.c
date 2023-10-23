@@ -252,6 +252,17 @@ void memalloc_free( void * ptr )
     if(ptr == ll->Arena_ptr){
       ll->type = HOLE;
       ll = save;
+      if (ll->next && ll->next->type == HOLE)
+      {
+        Node next = ll->next;
+        //Combine unused memory
+        ll->size = ll->size + next->size;
+
+
+        ll->next = next->next;
+        free(next);
+      }
+      
       break;
     }
     ll = ll->next;
