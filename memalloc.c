@@ -183,7 +183,7 @@ void * memalloc_alloc( size_t size )
       if(ll->type == HOLE && ll->size >= size)
       {
         node_size = ll->size - size;
-        if (node_size < max)
+        if (node_size < max && node_size > 0)
         {
           max = node_size;
           winner = ll;
@@ -196,19 +196,27 @@ void * memalloc_alloc( size_t size )
     ll = list;
     if (winner)
     {
-      
-      /*if (winner->size > size)
+      winner->type = PROCESS;
+      if (winner->size > size)
       {
         Node new_node = malloc(sizeof(node));
         
-        new_node->next = winner->next;
+
+        if (winner->next)
+          {
+            new_node->next = winner->next;
+          }
+          else
+          {
+            new_node->next = NULL;
+          }
 
         //allocating new node and linked list
         winner->next = new_node;
         new_node->prev = winner;
         new_node->size = winner->size - size;
         winner->size = size;
-      }*/
+      }
       
       return winner->Arena_ptr;
     }
