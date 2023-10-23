@@ -110,11 +110,24 @@ void * memalloc_alloc( size_t size )
           //Allocate new node
           Node new_node = malloc(sizeof(node));
           
-          new_node->next = ll->next;
+          //Save next node of ll if not null
+          if (ll->next)
+          {
+            new_node->next = ll->next;
+          }
+          else
+          {
+            new_node->next = NULL;
+          }
+          
+          
+          
 
           //allocating new node and linked list
           ll->next = new_node;
           new_node->prev = ll;
+
+          //Set size for new and old node
           new_node->size = ll->size - size;
           ll->size = size;
           
@@ -123,29 +136,31 @@ void * memalloc_alloc( size_t size )
           new_node->type = HOLE;
           new_node->Arena_ptr = ll->Arena_ptr + size;
         }
-
+        //Save last node
         last_alloc = ll;
+        //Memory to be returned
         void* ans = ll->Arena_ptr;
+        //Bring ll back to head of list
         ll = list;
         return ans;
       }
 
       //Reached end of ll and haven't found space
-      /*else if (ll->next == NULL && ll->size < size)
+      else if (ll->next == NULL && ll->size < size)
       {
         check = 1;
         ll = list;
       }
-
+      //Looped back to last alloc and haven't found space
       else if (ll == last_alloc && check == 1)
       {
         break;
-      }*/
+      }
       
       
       
       
-
+      //Iterate through list
       ll = ll->next;
     }
 
@@ -244,21 +259,6 @@ void * memalloc_alloc( size_t size )
     break;
 
   case FIRST_FIT:
-    /*while (ll)
-    {
-      if (ll->size >= size && ll->type == HOLE)
-      {
-        //Geneeral changes
-        ll->type = PROCESS;
-        list->prev = ll;
-        ll->next = list;
-        list->Arena_ptr = Arena_ptr;
-        list->type = HOLE;
-
-        list->size = ll->size - size;
-        ll->size = size;
-
-    }*/
 
 
     while (ll)
@@ -268,7 +268,16 @@ void * memalloc_alloc( size_t size )
         if (ll->size > size)
         {
           Node new_node = malloc(sizeof(node));
-          new_node->next = ll->next;
+          
+          
+          if (ll->next)
+          {
+            new_node->next = ll->next;
+          }
+          else
+          {
+            new_node->next = NULL;
+          }
 
           //allocating new node and linked list
           ll->next = new_node;
