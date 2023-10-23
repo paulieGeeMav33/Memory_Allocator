@@ -22,6 +22,7 @@
 
 #include "memalloc.h"
 #include <stdlib.h>
+#include <limits.h>
 // 2 Global variables Arena, Algo
 
 enum ALGORITHM algor;
@@ -54,6 +55,7 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
   ll->Arena_ptr = Arena_ptr;
   ll->type = HOLE;
   ll->next = NULL;
+  ll->prev = NULL;
   
   return 0;
 }
@@ -105,6 +107,7 @@ void * memalloc_alloc( size_t size )
         ll->type = PROCESS;
         if (ll->size > size)
         {
+          //Allocate new node
           Node new_node = malloc(sizeof(node));
           
           new_node->next = ll->next;
@@ -128,7 +131,7 @@ void * memalloc_alloc( size_t size )
       }
 
       //Reached end of ll and haven't found space
-      else if (ll->next == NULL && ll->size < size)
+      /*else if (ll->next == NULL && ll->size < size)
       {
         check = 1;
         ll = list;
@@ -137,7 +140,7 @@ void * memalloc_alloc( size_t size )
       else if (ll == last_alloc && check == 1)
       {
         break;
-      }
+      }*/
       
       
       
@@ -153,6 +156,32 @@ void * memalloc_alloc( size_t size )
 
 
   case BEST_FIT:
+    ;
+    size_t max = INT_MAX;
+    size_t node_size = 0;
+    Node winner = NULL;
+    while (ll)
+    {
+      if(ll->type == HOLE && ll->size >= size)
+      {
+        node_size = ll->size - size;
+        if (node_size < max)
+        {
+          max = node_size;
+          winner = ll;
+        }
+        
+      }
+      ll = ll->next;
+    }
+
+    ll = list;
+    if (winner)
+    {
+      return winner->Arena_ptr;
+    }
+    
+    
     return NULL;
     break;
 
