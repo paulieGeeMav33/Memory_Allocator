@@ -153,6 +153,7 @@ void * memalloc_alloc( size_t size )
       {
         check = 1;
         ll = list;
+        continue;
       }
       //Looped back to last alloc and haven't found space
       else if (ll == last_alloc && check == 1)
