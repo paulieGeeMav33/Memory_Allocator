@@ -345,15 +345,17 @@ void memalloc_free( void * ptr )
         free(next);
       }
 
-      else if (ll->prev && ll->prev->type == HOLE)
+      if (ll->prev && ll->prev->type == HOLE)
       {
         Node prev = ll->prev;
         //Combine unused memory
-        ll->size = ll->size + prev->size;
+        prev->size = ll->size + prev->size;
 
 
-        ll->prev = prev->next;
-        free(prev);
+        //ll->prev = prev->next;
+
+        prev->next = ll->next;
+        free(ll);
       }
       ll = save;
       
