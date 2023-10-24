@@ -244,7 +244,7 @@ void * memalloc_alloc( size_t size )
       if(ll->type == HOLE && ll->size >= size)
       {
         node_size_worst = ll->size - size;
-        if (node_size_worst > min)
+        if (node_size_worst >= min)
         {
           min = node_size_worst;
           loser = ll;
@@ -257,19 +257,33 @@ void * memalloc_alloc( size_t size )
     ll = list;
     if (loser)
     {
+      //Set busy
+      loser->type = PROCESS;
       
-      /*if (loser->size > size)
+      if (loser->size > size)
       {
         Node new_node = malloc(sizeof(node));
         
-        new_node->next = loser->next;
+        if (loser->next)
+          {
+            new_node->next = loser->next;
+          }
+          else
+          {
+            new_node->next = NULL;
+          }
 
         //allocating new node and linked list
         loser->next = new_node;
+
         new_node->prev = loser;
         new_node->size = loser->size - size;
+        new_node->type = HOLE;
+        new_node->Arena_ptr = loser->Arena_ptr + size;
+
+
         loser->size = size;
-      }*/
+      }
       
       return loser->Arena_ptr;
     }
