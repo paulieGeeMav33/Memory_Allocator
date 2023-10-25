@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/*First fit case*/
 
 int main( int argc, char * argv[] )
 {
@@ -10,19 +11,26 @@ int main( int argc, char * argv[] )
   struct timeval end;
 
   gettimeofday(&begin,NULL);
-  int success = memalloc_init(1000,FIRST_FIT);
-  if (success == -1)
+  
+  size_t count = 10000;
+  int status = memalloc_init(count,FIRST_FIT);
+  if (status == -1)
   {
-    return success;
+    return status;
   }
   
-  char* ptr = memalloc_alloc(1000);
-  size_t count = 2000;
+  char* ptr[count];
   for (size_t i = 0; i < count; i++)
   {
-    free(ptr);
-    ptr = memalloc_alloc(1000);
+    ptr[i] = memalloc_alloc(1000);
   }
+
+  for (size_t i = 0; i < count; i++)
+  {
+    memalloc_free(ptr[i]);
+  }
+  
+  memalloc_destroy();
   gettimeofday(&end,NULL);
   double duration = ((end.tv_sec * 1000000) + end.tv_usec) - ((begin.tv_sec * 1000000) + begin.tv_usec);
   printf("duration is:%f\n",duration);
