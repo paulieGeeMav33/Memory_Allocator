@@ -43,21 +43,17 @@ int main( int argc, char * argv[] )
   //Test two allocating all of the heap and freeing all even pointers
 
   gettimeofday(&begin,NULL);
-  status = memalloc_init(count,BEST_FIT);
-  if (status == -1)
-  {
-    return status;
-  }
+  
   for (size_t i = 0; i < count; i++)
   {
-    ptr[i] = malloc(1000);
+    ptr[i] = memalloc_alloc(1000);
   }
 
   for (size_t i = 0; i < count; i++)
   {
     if (i % 2 == 0)
     {
-      free(ptr[i]);
+      memalloc_free(ptr[i]);
       ptr[i] = NULL;
     }
   }
@@ -74,7 +70,7 @@ int main( int argc, char * argv[] )
   {
     if (ptr[i])
     {
-      free(ptr[i]);
+      memalloc_free(ptr[i]);
     }
   }
 

@@ -49,14 +49,14 @@ int main( int argc, char * argv[] )
   }
   for (size_t i = 0; i < count; i++)
   {
-    ptr[i] = malloc(1000);
+    ptr[i] = memalloc_alloc(1000);
   }
 
   for (size_t i = 0; i < count; i++)
   {
     if (i % 2 == 0)
     {
-      free(ptr[i]);
+      memalloc_free(ptr[i]);
       ptr[i] = NULL;
     }
   }
@@ -73,7 +73,7 @@ int main( int argc, char * argv[] )
   {
     if (ptr[i])
     {
-      free(ptr[i]);
+      memalloc_free(ptr[i]);
     }
   }
 
