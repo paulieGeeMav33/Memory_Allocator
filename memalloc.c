@@ -48,6 +48,11 @@ int memalloc_init( size_t size, enum ALGORITHM algorithm )
   size = ALIGN4(size);
   algor = algorithm;
   Arena_ptr = malloc(size);
+  if(malloc == NULL)
+  {
+    /*malloc failed*/
+    return -1;
+  }
 
   //Linked list allocation
   ll = malloc(sizeof(node));
