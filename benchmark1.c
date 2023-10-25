@@ -41,6 +41,32 @@ int main( int argc, char * argv[] )
 
   //Test two allocating half of the heap and freeing all even pointers
 
+  gettimeofday(&begin,NULL);
+  for (size_t i = 0; i < count; i++)
+  {
+    ptr[i] = malloc(1000);
+  }
+
+  for (size_t i = 0; i < count; i++)
+  {
+    if (i % 2 == 0)
+    {
+      free(ptr[i]);
+    }
+  }
+  gettimeofday(&end,NULL);
+  duration = ((end.tv_sec * 1000000) + end.tv_usec) - ((begin.tv_sec * 1000000) + begin.tv_usec);
+  printf("duration is:%f\n",duration);
+
+  
+
+
+
+  for (size_t i = 0; i < count; i++)
+  {
+    free(ptr[i]);
+  }
+
   //Test three allocating all of the heap freeing half than adding it back in
   
   return 0;
