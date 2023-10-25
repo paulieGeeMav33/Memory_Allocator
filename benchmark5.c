@@ -37,6 +37,7 @@ int main( int argc, char * argv[] )
   gettimeofday(&end,NULL);
   double duration = ((end.tv_sec * 1000000) + end.tv_usec) - ((begin.tv_sec * 1000000) + begin.tv_usec);
   printf("duration is:%f\n",duration);
+  fprintf(fp,"%f,",duration);
 
   //Test two allocating all of the heap and freeing all even pointers
 
@@ -62,6 +63,7 @@ int main( int argc, char * argv[] )
   gettimeofday(&end,NULL);
   duration = ((end.tv_sec * 1000000) + end.tv_usec) - ((begin.tv_sec * 1000000) + begin.tv_usec);
   printf("duration is:%f\n",duration);
+  fprintf(fp,"%f,",duration);
 
   
 
