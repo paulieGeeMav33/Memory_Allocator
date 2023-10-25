@@ -7,6 +7,8 @@
 int main( int argc, char * argv[] )
 {
 
+  //For csv data
+  FILE * fp = fopen("benchmark1.csv",'w');
 
   struct timeval begin;
   struct timeval end;
@@ -38,6 +40,7 @@ int main( int argc, char * argv[] )
   gettimeofday(&end,NULL);
   double duration = ((end.tv_sec * 1000000) + end.tv_usec) - ((begin.tv_sec * 1000000) + begin.tv_usec);
   printf("duration is:%f\n",duration);
+  fprintf(fp,"%d, ",duration);
 
   //Test two allocating half of the heap and freeing all even pointers
 
@@ -52,6 +55,7 @@ int main( int argc, char * argv[] )
     if (i % 2 == 0)
     {
       free(ptr[i]);
+      ptr[i] = NULL;
     }
   }
   gettimeofday(&end,NULL);
@@ -64,10 +68,15 @@ int main( int argc, char * argv[] )
 
   for (size_t i = 0; i < count; i++)
   {
-    free(ptr[i]);
+    if (ptr[i])
+    {
+      free(ptr[i]);
+    }
   }
 
   //Test three allocating all of the heap freeing half than adding it back in
   
+
+  fclose(fp);
   return 0;
 }
