@@ -47,11 +47,7 @@ int main( int argc, char * argv[] )
 
 
   gettimeofday(&begin,NULL);
-  status = memalloc_init(count,FIRST_FIT);
-  if (status == -1)
-  {
-    return status;
-  }
+  
 
   for (size_t i = 0; i < count; i++)
   {

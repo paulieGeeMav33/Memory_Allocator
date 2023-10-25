@@ -33,7 +33,7 @@ int main( int argc, char * argv[] )
     memalloc_free(ptr[i]);
   }
   
-  memalloc_destroy();
+  
   gettimeofday(&end,NULL);
   double duration = ((end.tv_sec * 1000000) + end.tv_usec) - ((begin.tv_sec * 1000000) + begin.tv_usec);
   printf("duration is:%f\n",duration);
@@ -42,11 +42,7 @@ int main( int argc, char * argv[] )
   //Test two allocating all of the heap and freeing all even pointers
 
   gettimeofday(&begin,NULL);
-  status = memalloc_init(count,WORST_FIT);
-  if (status == -1)
-  {
-    return status;
-  }
+  
   for (size_t i = 0; i < count; i++)
   {
     ptr[i] = memalloc_alloc(1000);
